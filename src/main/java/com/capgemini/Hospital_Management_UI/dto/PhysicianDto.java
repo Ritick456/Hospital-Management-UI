@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PhysicianDto {
+
     private Integer employeeId;
     private String name;
     private String position;
     private Integer ssn;
 
+
     // No Set<Department>, Set<Patient>, etc. — clean DTO!
 }
-
