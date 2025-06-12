@@ -1,10 +1,12 @@
 package com.capgemini.Hospital_Management_UI.feignService;
 
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.capgemini.Hospital_Management_UI.dto.Nurse;
 import com.capgemini.Hospital_Management_UI.dto.NurseResponseWrapper;
+import com.capgemini.Hospital_Management_UI.dto.PatientAppointmentDTO;
 import com.capgemini.Hospital_Management_UI.dto.Response;
 
 @FeignClient(name = "hospital-management-system", url = "http://localhost:8090")
@@ -37,5 +40,8 @@ public interface NurseClient {
     
     @PostMapping("/api/nurse")
     Response<Nurse> addNurse(@RequestBody Nurse nurse);
+    
+    @GetMapping("api/appointment/patient/by-nurse")
+    ResponseEntity<Response<List<PatientAppointmentDTO>>> getPatientsByNurseId(@RequestParam("nurseId") Integer nurseId);
 
 }

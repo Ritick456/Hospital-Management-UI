@@ -32,10 +32,14 @@
       <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Enter nurse's full name" required>
     </div>
 
-    <!-- 🧑‍⚕️ Position -->
+    <!-- 🧑‍⚕️ Position Dropdown -->
     <div class="mb-3">
       <label for="position" class="form-label">Position</label>
-      <input type="text" th:field="*{position}" class="form-control" id="position" placeholder="e.g., Head Nurse, Staff Nurse" required>
+      <select th:field="*{position}" class="form-select" id="position" required>
+        <option value="" disabled selected>Select a position</option>
+        <option value="Head Nurse">Head Nurse</option>
+        <option value="Nurse">Nurse</option>
+      </select>
     </div>
 
     <!-- 🧾 SSN -->

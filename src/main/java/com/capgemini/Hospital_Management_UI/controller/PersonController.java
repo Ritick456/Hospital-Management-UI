@@ -1,5 +1,6 @@
 package com.capgemini.Hospital_Management_UI.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import com.capgemini.Hospital_Management_UI.dto.Nurse;
 import com.capgemini.Hospital_Management_UI.dto.NurseResponseWrapper;
+import com.capgemini.Hospital_Management_UI.dto.PatientAppointmentDTO;
 import com.capgemini.Hospital_Management_UI.dto.Response;
 import com.capgemini.Hospital_Management_UI.feignService.NurseClient;
+
 
 import feign.FeignException;
 import lombok.AllArgsConstructor;
@@ -20,6 +23,7 @@ import lombok.AllArgsConstructor;
 public class PersonController {
 
     private final NurseClient nurseClient;
+   
 
     // 👥 View general people page
     @GetMapping("/people")
@@ -27,7 +31,6 @@ public class PersonController {
         return "people";
     }
 
-    // 📄 View all nurses with pagination and optional keyword search
     @GetMapping("/nurses")
     public String getAllNurses(
             @RequestParam(defaultValue = "0") int page,
@@ -35,13 +38,18 @@ public class PersonController {
             @RequestParam(required = false) String keyword,
             Model model) {
 
-        NurseResponseWrapper response = nurseClient.getAllNurse(page, size, keyword);
+        try {
+            NurseResponseWrapper response = nurseClient.getAllNurse(page, size, keyword);
 
-        model.addAttribute("nurses", response.getData());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", size);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("isLastPage", response.getData().size() < size); // crude last page check
+            model.addAttribute("nurses", response.getData());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("pageSize", size);
+            model.addAttribute("keyword", keyword);
+            model.addAttribute("isLastPage", response.getData().size() < size); // crude last page check
+        } catch (feign.FeignException.NotFound ex) {
+            model.addAttribute("nurses", Collections.emptyList());
+            model.addAttribute("message", "❌ No nurses found. Please try a different search or check the page number.");
+        }
 
         return "nurses";
     }
@@ -101,4 +109,30 @@ public class PersonController {
             return "add-nurse";
         }
     }
+
+    @GetMapping("/nurses/{id}/patients")
+    public String viewPatientsByNurse(@PathVariable("id") Integer nurseId, Model model) {
+        try {
+            ResponseEntity<Response<List<PatientAppointmentDTO>>> response = nurseClient.getPatientsByNurseId(nurseId);
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                List<PatientAppointmentDTO> patients = response.getBody().getData();
+                if (patients != null && !patients.isEmpty()) {
+                    model.addAttribute("patients", patients);
+                } else {
+                    model.addAttribute("error", "No patients found for nurse ID: " + nurseId);
+                }
+            } else {
+                model.addAttribute("error", "Failed to fetch patients. Please try again later.");
+            }
+
+        } catch (FeignException.NotFound e) {
+            model.addAttribute("error", "No patients found for nurse ID: " + nurseId);
+        } catch (FeignException e) {
+            model.addAttribute("error", "Error fetching patients: " + e.getMessage());
+        }
+
+        return "nurse-patients";
+    }
+
 }
