@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 
-public class PersonController {
+public class HomeController {
 
     // 👥 View general people page
     @GetMapping("/people")

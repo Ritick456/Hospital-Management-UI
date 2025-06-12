@@ -16,7 +16,7 @@ import com.capgemini.Hospital_Management_UI.dto.Nurse;
 import com.capgemini.Hospital_Management_UI.dto.NurseResponseWrapper;
 import com.capgemini.Hospital_Management_UI.dto.PatientAppointmentDTO;
 import com.capgemini.Hospital_Management_UI.dto.Response;
-import com.capgemini.Hospital_Management_UI.feignService.NurseClient;
+import com.capgemini.Hospital_Management_UI.feign.NurseClient;
 
 import feign.FeignException;
 import lombok.AllArgsConstructor;

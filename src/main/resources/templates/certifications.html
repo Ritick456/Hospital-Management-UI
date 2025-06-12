@@ -218,7 +218,7 @@
             border-radius: 8px;
             border: 2px solid rgba(255, 255, 255, 0.6);
             background: rgba(255, 255, 255, 0.95);
-            padding: 0.6rem 1rem;
+            padding: -1.4rem 1rem;
             font-size: 0.9rem;
             font-weight: 500;
             color: var(--text-primary);
@@ -231,24 +231,46 @@
             background: rgba(255, 255, 255, 1);
         }
 
+        /* Fixed dropdown styling with proper placeholder visibility */
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23495057' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1em;
+            padding-right: 2.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Improved option styling */
         .form-control option {
             background: white;
             color: var(--text-primary);
             padding: 0.5rem;
+            font-weight: 500;
         }
 
         .form-control option:hover {
             background: #f8f9fa;
         }
 
-        /* Improved dropdown styling */
-        select.form-control {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1em;
-            padding-right: 2.5rem;
+        /* Placeholder option styling - ensures it's visible */
+        .form-control option[value=""] {
+            color: #6c757d !important;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        /* When the select has no value selected, style it like a placeholder */
+        select.form-control:invalid {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        /* When a valid option is selected, use normal styling */
+        select.form-control:valid {
+            color: var(--text-primary);
+            font-style: normal;
         }
 
         .table {
@@ -384,11 +406,6 @@
             color: #6c757d;
             opacity: 0.8;
         }
-
-        .form-control option[value=""] {
-            color: #6c757d;
-            font-style: italic;
-        }
     </style>
 </head>
 <body>
@@ -434,7 +451,7 @@
                                 <div class="mb-3">
                                     <label for="physicianId" class="form-label">Select:</label>
                                     <select name="physicianId" id="physicianId" class="form-control form-control-sm" required>
-                                        <option value="">Choose physician...</option>
+                                        <option value="" disabled selected>Choose physician...</option>
                                         <option th:each="phys : ${physicians}"
                                                 th:value="${phys.employeeId}"
                                                 th:text="${phys.name}"
@@ -454,7 +471,7 @@
                                 <div class="mb-3">
                                     <label for="procedureId" class="form-label">Select:</label>
                                     <select name="procedureId" id="procedureId" class="form-control form-control-sm" required>
-                                        <option value="">Choose procedure...</option>
+                                        <option value="" disabled selected>Choose procedure...</option>
                                         <option th:each="proc : ${procedures}"
                                                 th:value="${proc.code}"
                                                 th:text="${proc.name}"

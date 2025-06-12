@@ -1,4 +1,4 @@
-package com.capgemini.Hospital_Management_UI.feignService;
+package com.capgemini.Hospital_Management_UI.feign;
 
 
 import java.util.List;
@@ -18,7 +18,7 @@ import com.capgemini.Hospital_Management_UI.dto.NurseResponseWrapper;
 import com.capgemini.Hospital_Management_UI.dto.PatientAppointmentDTO;
 import com.capgemini.Hospital_Management_UI.dto.Response;
 
-@FeignClient(name = "hospital-management-system", url = "http://localhost:8090")
+@FeignClient(name = "hospital-management-system", url = "http://localhost:8091")
 public interface NurseClient {
 
     @GetMapping("/api/nurse")
