@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Certification</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a56 0%, #ffad56 25%, #ffc947 50%, #ffeb47 75%, #f0f757 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .main-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #2d3748;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-body {
+            padding: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            color: #2d3748;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #ff8c42;
+            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+            background: #ffffff;
+            color: #2d3748;
+        }
+
+        .form-control::placeholder {
+            color: #a0aec0;
+            font-weight: 400;
+        }
+
+        .input-group-text {
+            background: linear-gradient(135deg, #ff8c42, #ffa726);
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .input-group .form-control {
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .input-group .form-control:focus {
+            border-left: 2px solid #ff8c42;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, #ff8c42, #ffa726, #ffcc02);
+            margin: 2.5rem 0;
+            border-radius: 2px;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #ff8c42, #ffa726);
+            border: none;
+            padding: 12px 40px;
+            font-weight: 600;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 140, 66, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255, 140, 66, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #718096, #a0aec0);
+            border: none;
+            padding: 12px 40px;
+            font-weight: 600;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #4a5568, #718096);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #fc8181, #f56565);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            padding: 1rem 1.5rem;
+        }
+
+        .section-title {
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .physician-section {
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.1), rgba(255, 167, 38, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .procedure-section {
+            background: linear-gradient(135deg, rgba(255, 204, 2, 0.1), rgba(240, 247, 87, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .certification-section {
+            background: linear-gradient(135deg, rgba(255, 167, 38, 0.1), rgba(255, 204, 2, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .card-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .physician-section,
+            .procedure-section,
+            .certification-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4 mb-5">
+    <h1 class="main-title">🔥 Add New Certification</h1>
+
+    <!-- Error message -->
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/trainedIn/add}" th:object="${trainedIn}" method="post">
+
+                <!-- Physician Information -->
+                <div class="physician-section">
+                    <h3 class="section-title">👨‍⚕️ Physician Details</h3>
+
+                    <div class="form-group">
+                        <label for="physicianEmployeeId">Employee ID:</label>
+                        <input type="number" class="form-control" id="physicianEmployeeId" th:field="*{physician.employeeId}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="physicianName">Full Name:</label>
+                        <input type="text" class="form-control" id="physicianName" th:field="*{physician.name}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="physicianPosition">Position:</label>
+                        <input type="text" class="form-control" id="physicianPosition" th:field="*{physician.position}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="physicianSSN">SSN:</label>
+                        <input type="text" class="form-control" id="physicianSSN" th:field="*{physician.ssn}" placeholder="XXX-XX-XXXX">
+                    </div>
+                </div>
+
+                <!-- Procedure Information -->
+                <div class="procedure-section">
+                    <h3 class="section-title">🔬 Procedure Details</h3>
+
+                    <div class="form-group">
+                        <label for="procedureCode">Procedure Code:</label>
+                        <input type="number" class="form-control" id="procedureCode" th:field="*{procedure.code}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="procedureName">Procedure Name:</label>
+                        <input type="text" class="form-control" id="procedureName" th:field="*{procedure.name}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="procedureCost">Procedure Cost:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" id="procedureCost" th:field="*{procedure.cost}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certification Information -->
+                <div class="certification-section">
+                    <h3 class="section-title">📜 Certification Info</h3>
+
+                    <div class="form-group">
+                        <label for="certificationDate">Certification Date:</label>
+                        <input type="datetime-local" class="form-control" id="certificationDate" th:field="*{certificationDate}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="certificationExpires">Expiration Date:</label>
+                        <input type="datetime-local" class="form-control" id="certificationExpires" th:field="*{certificationExpires}" required>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-success btn-lg mr-3">Add Certification</button>
+                    <a th:href="@{/trainedIn/certifications}" class="btn btn-secondary btn-lg">Cancel</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
