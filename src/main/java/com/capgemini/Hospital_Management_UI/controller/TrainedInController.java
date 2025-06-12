@@ -1,5 +1,6 @@
 package com.capgemini.Hospital_Management_UI.controller;
 
+import com.capgemini.Hospital_Management_UI.client.PhysicianClient;
 import com.capgemini.Hospital_Management_UI.client.TrainedInClient;
 import com.capgemini.Hospital_Management_UI.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +15,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/trainedIn")
 public class TrainedInController {
     private final TrainedInClient trainedInClient;
+    private final PhysicianClient physicianClient;
 
     private static final DateTimeFormatter INPUT_OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private static final DateTimeFormatter PARSE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -30,30 +33,95 @@ public class TrainedInController {
         model.addAttribute("pageResponse", null);
         model.addAttribute("startDateStr", "");
         model.addAttribute("endDateStr", "");
+
+        // 🔧 FIX: Load physicians for the dropdown on initial page load
+        try {
+            List<PhysicianDto> physicians = physicianClient.getAllPhysicians().getBody().getData();
+            model.addAttribute("physicians", physicians);
+        } catch (Exception e) {
+            model.addAttribute("physicians", Collections.emptyList());
+            model.addAttribute("error", "Error loading physicians: " + e.getMessage());
+        }
+
         return "certifications";
     }
 
     @GetMapping("/dates")
-    public String getByDates(
-            @PageableDefault(size = 2) Pageable pageable,
+    public String getCertificationsByDate(
             @RequestParam("startDate") String startDateStr,
             @RequestParam("endDate") String endDateStr,
-            @RequestParam(value = "filter1", required = false) String filter1,
-            @RequestParam(value = "filter2", required = false) String filter2,
+            @PageableDefault(page = 0, size = 2) Pageable pageable,
             Model model) {
-        startDateStr = normalizeDateTimeString(startDateStr);
-        endDateStr = normalizeDateTimeString(endDateStr);
 
-        LocalDateTime startDate = LocalDateTime.parse(startDateStr, PARSE_FORMATTER);
-        LocalDateTime endDate = LocalDateTime.parse(endDateStr, PARSE_FORMATTER);
+        // Load physicians first (needed for the dropdown)
+        try {
+            List<PhysicianDto> physicians = physicianClient.getAllPhysicians().getBody().getData();
+            model.addAttribute("physicians", physicians);
+        } catch (Exception e) {
+            model.addAttribute("physicians", Collections.emptyList());
+        }
 
-        PageResponse<TrainedInPostDTO> response = trainedInClient.getByDates(pageable, startDate, endDate)
-                .getBody().getData();
+        try {
+            String normalizedStartDate = normalizeDateTimeString(startDateStr);
+            String normalizedEndDate = normalizeDateTimeString(endDateStr);
+            LocalDateTime startDate = LocalDateTime.parse(normalizedStartDate, PARSE_FORMATTER);
+            LocalDateTime endDate = LocalDateTime.parse(normalizedEndDate, PARSE_FORMATTER);
+            PageResponse<TrainedInPostDTO> response = trainedInClient.getByDates(pageable, startDate, endDate).getBody().getData();
+            model.addAttribute("appointments", response.getContent());
+            model.addAttribute("pageResponse", response);
+            model.addAttribute("startDateStr", startDateStr);
+            model.addAttribute("endDateStr", endDateStr);
+            model.addAttribute("filterType", "dates");
+        } catch (Exception e) {
+            model.addAttribute("error", "Invalid date format or error fetching certifications: " + e.getMessage());
+            model.addAttribute("appointments", Collections.emptyList());
+            model.addAttribute("pageResponse", null);
+            model.addAttribute("startDateStr", startDateStr);
+            model.addAttribute("endDateStr", endDateStr);
+            model.addAttribute("filterType", "dates");
+        }
 
-        model.addAttribute("appointments", response.getContent());
-        model.addAttribute("pageResponse", response);
-        model.addAttribute("startDateStr", startDate.format(INPUT_OUTPUT_FORMATTER));
-        model.addAttribute("endDateStr", endDate.format(INPUT_OUTPUT_FORMATTER));
+        return "certifications";
+    }
+
+    @GetMapping("/physicians")
+    public String getCertificationsByPhysician(
+            @RequestParam(value = "physicianId", required = false) Integer physicianId,
+            @PageableDefault(page = 0, size = 2) Pageable pageable,
+            Model model) {
+
+        // Load physicians first (always needed for the dropdown)
+        try {
+            List<PhysicianDto> physicians = physicianClient.getAllPhysicians().getBody().getData();
+            model.addAttribute("physicians", physicians);
+        } catch (Exception e) {
+            model.addAttribute("physicians", Collections.emptyList());
+            model.addAttribute("error", "Error loading physicians: " + e.getMessage());
+            model.addAttribute("filterType", "physicians");
+            return "certifications";
+        }
+
+        if (physicianId == null) {
+            model.addAttribute("error", "Please select a physician");
+            model.addAttribute("appointments", Collections.emptyList());
+            model.addAttribute("pageResponse", null);
+            model.addAttribute("filterType", "physicians");
+            return "certifications";
+        }
+
+        try {
+            PageResponse<ProcedureDTO> response = trainedInClient.fetchAllProceduresByPhysicianId(physicianId, pageable).getBody().getData();
+            model.addAttribute("appointments", response.getContent());
+            model.addAttribute("pageResponse", response);
+            model.addAttribute("selectedPhysicianId", physicianId);
+            model.addAttribute("filterType", "physicians");
+        } catch (Exception e) {
+            model.addAttribute("error", "Error fetching certifications for physician: " + e.getMessage());
+            model.addAttribute("appointments", Collections.emptyList());
+            model.addAttribute("pageResponse", null);
+            model.addAttribute("filterType", "physicians");
+        }
+
         return "certifications";
     }
 
