@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Nurse</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+  <h2 class="mb-4">➕ Add New Nurse</h2>
+
+  <!-- 🔴 Error Message Section -->
+  <div th:if="${errorMessage}" class="alert alert-danger d-flex align-items-center" role="alert">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2" viewBox="0 0 16 16">
+      <path d="M8.982 1.566a1.13 1.13 0 0 0-1.964 0L.165 13.233c-.457.778.091 1.767.982 1.767h13.707c.89 0 1.438-.99.982-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1-2.002 0 1 1 0 0 1 2.002 0z"/>
+    </svg>
+    <span th:text="${errorMessage}">Error placeholder</span>
+  </div>
+
+  <form th:action="@{/nurses/add}" th:object="${nurse}" method="post" class="card p-4 shadow rounded bg-white">
+
+    <!-- 🆔 Employee ID -->
+    <div class="mb-3">
+      <label for="employeeId" class="form-label">Employee ID</label>
+      <input type="text" th:field="*{employeeId}" class="form-control" id="employeeId" placeholder="Enter unique employee ID" required>
+    </div>
+
+    <!-- 👩‍⚕️ Name -->
+    <div class="mb-3">
+      <label for="name" class="form-label">Full Name</label>
+      <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Enter nurse's full name" required>
+    </div>
+
+    <!-- 🧑‍⚕️ Position Dropdown -->
+    <div class="mb-3">
+      <label for="position" class="form-label">Position</label>
+      <select th:field="*{position}" class="form-select" id="position" required>
+        <option value="" disabled selected>Select a position</option>
+        <option value="Head Nurse">Head Nurse</option>
+        <option value="Nurse">Nurse</option>
+      </select>
+    </div>
+
+    <!-- 🧾 SSN -->
+    <div class="mb-3">
+      <label for="ssn" class="form-label">SSN</label>
+      <input type="number" th:field="*{ssn}" class="form-control" id="ssn" placeholder="Enter Social Security Number" required>
+    </div>
+
+    <!-- ✅ Registered Checkbox -->
+    <div class="form-check mb-4">
+      <input type="checkbox" th:field="*{registered}" class="form-check-input" id="registered">
+      <label class="form-check-label" for="registered">Is the nurse registered?</label>
+    </div>
+
+    <!-- 🔘 Action Buttons -->
+    <div class="d-flex justify-content-between">
+      <a th:href="@{/nurses}" class="btn btn-secondary">⬅ Back</a>
+      <button type="submit" class="btn btn-success">💾 Add Nurse</button>
+    </div>
+
+  </form>
+</div>
+
+</body>
+</html>
