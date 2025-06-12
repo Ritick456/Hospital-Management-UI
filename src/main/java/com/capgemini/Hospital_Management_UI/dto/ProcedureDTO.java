@@ -1,5 +1,6 @@
 package com.capgemini.Hospital_Management_UI.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,13 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PhysicianDto {
-
-    private Integer employeeId;
+public class ProcedureDTO {
+    private Integer code;
     private String name;
-    private String position;
-    private Integer ssn;
-
-
-    // No Set<Department>, Set<Patient>, etc. — clean DTO!
+    private Double cost;
 }
+
