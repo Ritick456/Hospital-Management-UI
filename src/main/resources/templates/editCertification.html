@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Certification</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 1400px; }
+        .card { border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+<div class="container mt-5 mb-5">
+    <h1 class="mb-4 text-primary">Edit Certification</h1>
+    <div class="card p-4">
+        <form th:action="@{/trainedIn/update/{physicianId}/{procedureId}(physicianId=${physicianId}, procedureId=${procedureId})}" method="post">
+            <div class="form-group">
+                <label for="procedureId">Procedure ID:</label>
+                <input type="text" class="form-control" id="procedureId" th:value="${trainedIn.procedure.code}" readonly />
+            </div>
+            <div class="form-group">
+                <label for="procedureName">Procedure Name:</label>
+                <input type="text" class="form-control" id="procedureName" th:value="${trainedIn.procedure.name}" readonly />
+            </div>
+            <div class="form-group">
+                <label for="cost">Cost:</label>
+                <input type="number" class="form-control" id="cost" name="cost" th:value="${trainedIn.procedure.cost}" step="0.01" required />
+            </div>
+            <div class="form-group">
+                <label for="certificationExpires">Certification Expires:</label>
+                <input type="datetime-local" class="form-control" id="certificationExpires" name="certificationExpires"
+                       th:value="${certificationExpiresStr}" required />
+            </div>
+            <div class="form-group">
+                <label for="startDate">Start Date:</label>
+                <input type="datetime-local" class="form-control" id="startDate"
+                       th:value="${certificationDateStr}" readonly />
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

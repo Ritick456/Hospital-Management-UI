@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Certification</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 1400px; }
+        .card { border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+<div class="container mt-5 mb-5">
+    <h1 class="mb-4 text-primary">Add New Certification</h1>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div class="card p-4">
+        <form th:action="@{/trainedIn/add}" method="post">
+            <h3>Physician Details</h3>
+            <div class="form-group">
+                <label for="physicianId">Physician ID:</label>
+                <input type="number" class="form-control" id="physicianId" name="physician.employeeId" required />
+            </div>
+            <div class="form-group">
+                <label for="physicianName">Physician Name:</label>
+                <input type="text" class="form-control" id="physicianName" name="physician.name" required />
+            </div>
+            <div class="form-group">
+                <label for="physicianPosition">Position:</label>
+                <input type="text" class="form-control" id="physicianPosition" name="physician.position" required />
+            </div>
+            <div class="form-group">
+                <label for="physicianSsn">SSN:</label>
+                <input type="number" class="form-control" id="physicianSsn" name="physician.ssn" required />
+            </div>
+            <h3>Procedure Details</h3>
+            <div class="form-group">
+                <label for="procedureCode">Procedure Code:</label>
+                <input type="number" class="form-control" id="procedureCode" name="procedure.code" required />
+            </div>
+            <div class="form-group">
+                <label for="procedureName">Procedure Name:</label>
+                <input type="text" class="form-control" id="procedureName" name="procedure.name" required />
+            </div>
+            <div class="form-group">
+                <label for="procedureCost">Cost:</label>
+                <input type="number" class="form-control" id="procedureCost" name="procedure.cost" step="0.01" required />
+            </div>
+            <h3>Certification Details</h3>
+            <div class="form-group">
+                <label for="certificationDate">Certification Date:</label>
+                <input type="datetime-local" class="form-control" id="certificationDate" name="certificationDate" required />
+            </div>
+            <div class="form-group">
+                <label for="certificationExpires">Certification Expires:</label>
+                <input type="datetime-local" class="form-group" id="certificationExpires" name="certificationExpires" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a th:href="@{/trainedIn/certifications}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>
