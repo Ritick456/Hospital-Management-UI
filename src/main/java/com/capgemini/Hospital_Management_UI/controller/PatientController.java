@@ -112,7 +112,7 @@ public class PatientController {
         return mav;
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ModelAndView updatePatient(@ModelAttribute PatientDTO patientDTO) {
         logger.info("Updating patient with SSN {} via API at {}", patientDTO.getSsn(), apiBaseUrl);
         try {
