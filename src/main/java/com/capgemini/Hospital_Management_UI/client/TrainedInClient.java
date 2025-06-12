@@ -42,4 +42,10 @@ public interface TrainedInClient {
     ResponseEntity<Response<PageResponse<ProcedureDTO>>> fetchAllProceduresByPhysicianId(
             @PathVariable("physicianId") Integer physicianId,
             Pageable pageable);
+
+    @GetMapping("fetch/procedure/{procedureId}/physicians")
+    ResponseEntity<Response<PageResponse<PhysicianAppointmentDTO>>> fetchAllPhysiciansByProcedureId(
+            @PathVariable Integer procedureId,
+            @PageableDefault(page = 0, size = 5) Pageable pageable
+    );
 }

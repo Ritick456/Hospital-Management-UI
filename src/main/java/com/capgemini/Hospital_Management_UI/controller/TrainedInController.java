@@ -1,6 +1,7 @@
 package com.capgemini.Hospital_Management_UI.controller;
 
 import com.capgemini.Hospital_Management_UI.client.PhysicianClient;
+import com.capgemini.Hospital_Management_UI.client.ProcedureClient;
 import com.capgemini.Hospital_Management_UI.client.TrainedInClient;
 import com.capgemini.Hospital_Management_UI.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.List;
 public class TrainedInController {
     private final TrainedInClient trainedInClient;
     private final PhysicianClient physicianClient;
+    private final ProcedureClient procedureClient;
 
     private static final DateTimeFormatter INPUT_OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private static final DateTimeFormatter PARSE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -43,6 +45,63 @@ public class TrainedInController {
             model.addAttribute("error", "Error loading physicians: " + e.getMessage());
         }
 
+        // Load procedures for the dropdown on initial page load
+        try {
+            List<ProcedureDTO> procedures = procedureClient.getAllProcedures().getBody().getData();
+            model.addAttribute("procedures", procedures);
+        } catch (Exception e) {
+            model.addAttribute("procedures", Collections.emptyList());
+        }
+
+        return "certifications";
+    }
+
+    @GetMapping("/procedures")
+    public String getCertificationsByProcedure(
+            @RequestParam(value = "procedureId", required = false) Integer procedureId,
+            @PageableDefault(page = 0, size = 2) Pageable pageable,
+            Model model) {
+
+        // Load physicians for the dropdown
+        try {
+            List<PhysicianDto> physicians = physicianClient.getAllPhysicians().getBody().getData();
+            model.addAttribute("physicians", physicians);
+        } catch (Exception e) {
+            model.addAttribute("physicians", Collections.emptyList());
+        }
+
+        // Load procedures for the dropdown (always needed)
+        try {
+            List<ProcedureDTO> procedures = procedureClient.getAllProcedures().getBody().getData();
+            model.addAttribute("procedures", procedures);
+        } catch (Exception e) {
+            model.addAttribute("procedures", Collections.emptyList());
+            model.addAttribute("error", "Error loading procedures: " + e.getMessage());
+            model.addAttribute("filterType", "procedures");
+            return "certifications";
+        }
+
+        if (procedureId == null) {
+            model.addAttribute("error", "Please select a procedure");
+            model.addAttribute("appointments", Collections.emptyList());
+            model.addAttribute("pageResponse", null);
+            model.addAttribute("filterType", "procedures");
+            return "certifications";
+        }
+
+        try {
+            PageResponse<PhysicianAppointmentDTO> response = trainedInClient.fetchAllPhysiciansByProcedureId(procedureId, pageable).getBody().getData();
+            model.addAttribute("appointments", response.getContent());
+            model.addAttribute("pageResponse", response);
+            model.addAttribute("selectedProcedureId", procedureId);
+            model.addAttribute("filterType", "procedures");
+        } catch (Exception e) {
+            model.addAttribute("error", "Error fetching physicians for procedure: " + e.getMessage());
+            model.addAttribute("appointments", Collections.emptyList());
+            model.addAttribute("pageResponse", null);
+            model.addAttribute("filterType", "procedures");
+        }
+
         return "certifications";
     }
 
@@ -59,6 +118,14 @@ public class TrainedInController {
             model.addAttribute("physicians", physicians);
         } catch (Exception e) {
             model.addAttribute("physicians", Collections.emptyList());
+        }
+
+        // Load procedures for the dropdown
+        try {
+            List<ProcedureDTO> procedures = procedureClient.getAllProcedures().getBody().getData();
+            model.addAttribute("procedures", procedures);
+        } catch (Exception e) {
+            model.addAttribute("procedures", Collections.emptyList());
         }
 
         try {
@@ -101,6 +168,14 @@ public class TrainedInController {
             return "certifications";
         }
 
+        // Load procedures for the dropdown
+        try {
+            List<ProcedureDTO> procedures = procedureClient.getAllProcedures().getBody().getData();
+            model.addAttribute("procedures", procedures);
+        } catch (Exception e) {
+            model.addAttribute("procedures", Collections.emptyList());
+        }
+
         if (physicianId == null) {
             model.addAttribute("error", "Please select a physician");
             model.addAttribute("appointments", Collections.emptyList());
@@ -110,6 +185,7 @@ public class TrainedInController {
         }
 
         try {
+            // Use the same DTO type as the date search for consistency
             PageResponse<ProcedureDTO> response = trainedInClient.fetchAllProceduresByPhysicianId(physicianId, pageable).getBody().getData();
             model.addAttribute("appointments", response.getContent());
             model.addAttribute("pageResponse", response);
