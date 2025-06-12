@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Affiliations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .pagination .page-item.disabled .page-link {
+            pointer-events: none;
+            opacity: 0.65;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Physician-Department Affiliations</h2>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Search Form -->
+    <form id="searchForm" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="physicianName" th:value="${physicianName ?: ''}" placeholder="Physician Name">
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="departmentName" th:value="${departmentName ?: ''}" placeholder="Department Name">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-secondary w-100" onclick="resetSearch()">Reset</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Row Count Selector and Add Button -->
+    <div class="d-flex justify-content-between mb-3">
+        <div>
+            <label for="pageSizeSelect" class="me-2">Rows per page:</label>
+            <select id="pageSizeSelect" class="form-select d-inline-block w-auto" onchange="changePageSize(this)">
+                <option th:value="5" th:selected="${pageSize == 5}">5</option>
+                <option th:value="10" th:selected="${pageSize == 10}">10</option>
+                <option th:value="15" th:selected="${pageSize == 15}">15</option>
+            </select>
+        </div>
+        <a th:href="@{/aman/add-affiliation}" class="btn btn-primary">Insert New Affiliation</a>
+    </div>
+
+    <!-- Affiliations Table -->
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Physician Name</th>
+            <th>Department Name</th>
+            <th>Primary Affiliation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="affiliation : ${affiliations}">
+            <td th:text="${affiliation.physician}"></td>
+            <td th:text="${affiliation.department}"></td>
+            <td th:text="${affiliation.primaryAffiliation} ? 'Yes' : 'No'"></td>
+        </tr>
+        <tr th:if="${affiliations.isEmpty()}">
+            <td colspan="3" class="text-center">No affiliations found</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <nav th:if="${totalPages > 1}" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${isFirst} ? 'disabled'">
+                <a class="page-link" th:href="@{/aman/(page=${currentPage - 1},size=${pageSize},sort=${sort},physicianName=${#strings.defaultString(physicianName, '')},departmentName=${#strings.defaultString(departmentName, '')})}">Previous</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/aman/(page=${i},size=${pageSize},sort=${sort},physicianName=${#strings.defaultString(physicianName, '')},departmentName=${#strings.defaultString(departmentName, '')})}" th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${isLast} ? 'disabled'">
+                <a class="page-link" th:href="@{/aman/(page=${currentPage + 1},size=${pageSize},sort=${sort},physicianName=${#strings.defaultString(physicianName, '')},departmentName=${#strings.defaultString(departmentName, '')})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function changePageSize(select) {
+        const size = select.value;
+        const params = new URLSearchParams(window.location.search);
+        params.set('size', size);
+        params.set('page', '0'); // Reset to first page when size changes
+        window.location.search = params.toString();
+    }
+
+    function resetSearch() {
+        const params = new URLSearchParams(window.location.search);
+        params.delete('physicianName');
+        params.delete('departmentName');
+        window.location.search = params.toString();
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const params = new URLSearchParams(window.location.search);
+        const physicianName = this.physicianName.value.trim();
+        const departmentName = this.departmentName.value.trim();
+        if (physicianName) params.set('physicianName', physicianName);
+        else params.delete('physicianName');
+        if (departmentName) params.set('departmentName', departmentName);
+        else params.delete('departmentName');
+        params.set('page', '0'); // Reset to first page on new search
+        window.location.search = params.toString();
+    });
+</script>
+</body>
+</html>
