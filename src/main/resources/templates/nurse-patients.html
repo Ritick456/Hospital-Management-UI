@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Nurse's Patients</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<!-- 🔼 HEADER -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/nurses">🏥 Back to Nurse Directory</a>
+  </div>
+</nav>
+
+<!-- 🧾 BODY -->
+<main class="container flex-fill">
+  <h2 class="text-center text-primary mb-4">🧑‍⚕️ Assigned Patients</h2>
+
+  <div th:if="${error}" class="alert alert-warning text-center">
+    <span th:text="${error}">No patients found.</span>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
+       th:if="${patients != null and !patients.isEmpty()}">
+    <div class="col" th:each="patient : ${patients}">
+      <div class="card h-100 shadow-sm border-0 rounded-4">
+        <div class="card-body">
+          <h5 class="card-title fw-bold text-primary" th:text="${patient.name}">Patient Name</h5>
+          <hr>
+          <ul class="list-unstyled text-muted mb-3">
+            <li><strong>🏠 Address:</strong> <span th:text="${patient.address}">N/A</span></li>
+            <li><strong>📞 Phone:</strong> <span th:text="${patient.phone}">N/A</span></li>
+            <li><strong>🛡 Insurance ID:</strong> <span th:text="${patient.insuranceId}">N/A</span></li>
+            <li><strong>🔒 SSN:</strong> <span th:text="${patient.ssn}">N/A</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info text-center" 
+       th:if="${patients == null or patients.isEmpty()} and ${error == null}">
+    💤 No assigned patients for this nurse.
+  </div>
+
+  <div class="text-center mt-5">
+    <a href="/nurses" class="btn btn-secondary">⬅ Back to Nurses</a>
+  </div>
+</main>
+
+<!-- 🔽 FOOTER -->
+<footer class="bg-dark text-white text-center py-3 mt-4">
+  <small>© 2025 Hospital Management System</small>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Nurse Records</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<!-- 🔼 HEADER -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow mb-3">
+  <div class="container-fluid justify-content-between">
+    <span class="navbar-brand">🏥 Nurse Directory</span>
+    <div class="d-flex align-items-center gap-3" th:if="${message == null}">
+      <form method="get" action="/nurses" class="d-flex align-items-center">
+        <input type="hidden" name="page" value="0" />
+        <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}" />
+        <label class="text-white me-2 mb-0">Rows:</label>
+        <select class="form-select form-select-sm w-auto" name="size" onchange="this.form.submit()">
+          <option th:selected="${pageSize == 2}" value="2">2</option>
+          <option th:selected="${pageSize == 3}" value="3">3</option>
+          <option th:selected="${pageSize == 5}" value="5">5</option>
+          <option th:selected="${pageSize == 10}" value="10">10</option>
+        </select>
+      </form>
+      <a href="/nurses/add" class="btn btn-success">➕ Add Nurse</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 🧾 BODY -->
+<main class="container flex-fill">
+
+  <!-- ❗ Message Block (Error or Info) -->
+  <div th:if="${message}" class="alert alert-danger text-center">
+    <p th:text="${message}">Something went wrong.</p>
+  </div>
+
+  <!-- 🔍 Search Bar -->
+  <div th:if="${message == null}">
+    <form class="d-flex justify-content-center mb-4" method="get" action="/nurses">
+      <input class="form-control w-50 me-2" type="search" name="keyword" placeholder="Search by name..."
+             th:value="${keyword != null ? keyword : ''}" aria-label="Search">
+      <input type="hidden" name="page" value="0" />
+      <input type="hidden" name="size" th:value="${pageSize}" />
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- 📋 Nurse Cards -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" 
+       th:if="${message == null and nurses != null and !nurses.isEmpty()}">
+    <div class="col" th:each="nurse : ${nurses}">
+      <div class="card h-100 shadow-sm border-0 rounded-4">
+        <div class="card-body">
+          <h5 class="card-title text-primary fw-bold" th:text="${nurse.name}">Nurse Name</h5>
+          <hr>
+          <ul class="list-unstyled text-muted mb-3">
+            <li><strong>🆔 Employee ID:</strong> <span th:text="${nurse.employeeId}">12345</span></li>
+            <li><strong>💼 Position:</strong> <span th:text="${nurse.position}">N/A</span></li>
+            <li><strong>📝 Registered:</strong> 
+              <span th:text="${nurse.registered} ? '✅ Yes' : '❌ No'">Yes</span>
+            </li>
+            <li><strong>🔒 SSN:</strong> <span th:text="${nurse.ssn}">000-00-0000</span></li>
+          </ul>
+
+          <!-- 👇 Action Buttons -->
+          <div class="d-flex flex-wrap gap-2">
+            <a th:href="@{/nurses/edit/{id}(id=${nurse.employeeId})}" 
+               class="btn btn-outline-primary btn-sm rounded-pill">✏️ Edit Profile</a>
+            <a th:href="@{/nurses/{id}/patients(id=${nurse.employeeId})}"
+               class="btn btn-outline-info btn-sm rounded-pill">👤 View Patients</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ❌ No Search Results -->
+  <div th:if="${message == null and nurses != null and nurses.isEmpty()}" class="alert alert-warning text-center mt-4">
+    🚫 No nurses found matching your search.
+    <div class="mt-2">
+      <a th:href="@{/nurses(page=0, size=${pageSize})}" class="btn btn-outline-secondary btn-sm">🔄 Reset Search</a>
+    </div>
+  </div>
+
+  <!-- ⏮️ Pagination -->
+  <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap" th:if="${message == null}">
+    <div class="text-muted mb-2">
+      Page <span class="fw-bold" th:text="${currentPage + 1}">1</span>
+    </div>
+    <div class="d-flex gap-2 mb-2">
+      <form method="get" action="/nurses">
+        <input type="hidden" name="page" th:value="${currentPage - 1}" />
+        <input type="hidden" name="size" th:value="${pageSize}" />
+        <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}" />
+        <button type="submit" class="btn btn-outline-secondary btn-sm"
+                th:attr="disabled=${currentPage == 0} ? 'disabled' : null">⬅️ Previous</button>
+      </form>
+
+      <form method="get" action="/nurses">
+        <input type="hidden" name="page" th:value="${currentPage + 1}" />
+        <input type="hidden" name="size" th:value="${pageSize}" />
+        <input type="hidden" name="keyword" th:value="${keyword != null ? keyword : ''}" />
+        <button type="submit" class="btn btn-outline-secondary btn-sm"
+                th:attr="disabled=${isLastPage} ? 'disabled' : null">Next ➡️</button>
+      </form>
+    </div>
+  </div>
+
+</main>
+
+<!-- 🔽 FOOTER -->
+<footer class="bg-dark text-white text-center py-3 mt-4">
+  <small>© 2025 Hospital Management System</small>
+</footer>
+
+</body>
+</html>
