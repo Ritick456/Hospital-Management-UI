@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
 
     // 👥 View general people page
-    @GetMapping("/people")
+    @GetMapping("/home")
     public String getPeople(Model model) {
         return "people";
     }
