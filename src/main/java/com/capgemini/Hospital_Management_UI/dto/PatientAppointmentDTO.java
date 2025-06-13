@@ -4,13 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class PatientAppointmentDTO {
-	 private String name;
-	    private String address;
-	    private String phone;
-	    private Long insuranceId;
-	    private Long ssn;
+
+    private String name;
+
+    private String address;
+
+    private String phone;
+
+    private Integer insuranceId;
+
+    private Integer ssn;
 }
