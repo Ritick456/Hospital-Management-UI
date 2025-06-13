@@ -3,6 +3,7 @@ package com.capgemini.Hospital_Management_UI.controller;
 import java.util.Collections;
 import java.util.List;
 
+import com.capgemini.Hospital_Management_UI.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.capgemini.Hospital_Management_UI.dto.Nurse;
-import com.capgemini.Hospital_Management_UI.dto.NurseResponseWrapper;
-import com.capgemini.Hospital_Management_UI.dto.PatientAppointmentDTO;
-import com.capgemini.Hospital_Management_UI.dto.Response;
 import com.capgemini.Hospital_Management_UI.client.NurseClient;
 
 import feign.FeignException;
@@ -105,28 +102,29 @@ public class NurseController {
 	        }
 	    }
 
-	    @GetMapping("/nurses/{id}/patients")
-	    public String viewPatientsByNurse(@PathVariable("id") Integer nurseId, Model model) {
-	        try {
-	            ResponseEntity<Response<List<PatientAppointmentDTO>>> response = nurseClient.getPatientsByNurseId(nurseId);
+	@GetMapping("/nurses/{id}/patients")
+	public String viewPatientsByNurseId(@PathVariable("id") Integer nurseId, Model model) {
+		try {
+			ResponseEntity<Response<PageResponse<PatientAppointmentDTO>>> response = nurseClient.getPatientsByNurseId(nurseId);
 
-	            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-	                List<PatientAppointmentDTO> patients = response.getBody().getData();
-	                if (patients != null && !patients.isEmpty()) {
-	                    model.addAttribute("patients", patients);
-	                } else {
-	                    model.addAttribute("error", "No patients found for nurse ID: " + nurseId);
-	                }
-	            } else {
-	                model.addAttribute("error", "Failed to fetch patients. Please try again later.");
-	            }
+			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+				PageResponse<PatientAppointmentDTO> pageResponse = response.getBody().getData();
+				if (pageResponse != null && !pageResponse.getContent().isEmpty()) {
+					model.addAttribute("patients", pageResponse.getContent());
+					model.addAttribute("pageResponse", pageResponse);
+				} else {
+					model.addAttribute("error", "No patients found for nurse ID: " + nurseId);
+				}
+			} else {
+				model.addAttribute("error", "Failed to fetch patients. Please try again later.");
+			}
 
-	        } catch (FeignException.NotFound e) {
-	            model.addAttribute("error", "No patients found for nurse ID: " + nurseId);
-	        } catch (FeignException e) {
-	            model.addAttribute("error", "Error fetching patients: " + e.getMessage());
-	        }
+		} catch (FeignException.NotFound e) {
+			model.addAttribute("error", "No patients found for nurse ID: " + nurseId);
+		} catch (FeignException e) {
+			model.addAttribute("error", "Error fetching patients: " + e.getMessage());
+		}
 
-	        return "nurse-patients";
-	    }
+		return "nurse-patients";
+	}
 }

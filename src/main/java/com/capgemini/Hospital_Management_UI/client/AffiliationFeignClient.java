@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "hospital-management-system", url = "http://localhost:8090")
+@FeignClient(name = "hospital-management-system", url = "http://localhost:8091")
 public interface AffiliationFeignClient {
 
     @GetMapping("/api/affiliated_with")

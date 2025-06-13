@@ -41,7 +41,7 @@ public class DepartmentController{
         model.addAttribute("departments", departments);
         model.addAttribute("currentPage", page);
         // totalPages = calculate manually or hardcode for now if not returned from backend
-        model.addAttribute("totalPages", 2); //UPDATE THIS TO REAL VALUE
+        model.addAttribute("totalPages", size); //UPDATE THIS TO REAL VALUE
 
         return "department-list";
     }
