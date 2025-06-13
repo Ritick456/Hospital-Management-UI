@@ -1,7 +1,10 @@
 package com.capgemini.Hospital_Management_UI.controller;
 
-import com.capgemini.Hospital_Management_UI.Dto.*;
-import com.capgemini.Hospital_Management_UI.OpenFeign.AffiliationFeignClient;
+import com.capgemini.Hospital_Management_UI.client.AffiliationFeignClient;
+import com.capgemini.Hospital_Management_UI.dto.DepartmentDto;
+import com.capgemini.Hospital_Management_UI.dto.PageResponse;
+import com.capgemini.Hospital_Management_UI.dto.PhysicianDto;
+import com.capgemini.Hospital_Management_UI.dto.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +32,10 @@ public class AffiliationController {
             @RequestParam(value = "departmentName", required = false) String departmentName,
             Model model) {
         try {
-            ResponseEntity<Response<PageResponse<ResponseAffiliatedDto>>> response =
+            ResponseEntity<Response<PageResponse<com.capgemini.Hospital_Management_UI.Dto.ResponseAffiliatedDto>>> response =
                     affiliationFeignClient.getAllAffiliatedWith(page, size, sort, physicianName, departmentName);
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                PageResponse<ResponseAffiliatedDto> pageResponse = response.getBody().getData();
+                PageResponse<com.capgemini.Hospital_Management_UI.Dto.ResponseAffiliatedDto> pageResponse = response.getBody().getData();
                 model.addAttribute("affiliations", pageResponse.getContent());
                 model.addAttribute("currentPage", pageResponse.getPageNumber());
                 model.addAttribute("pageSize", pageResponse.getPageSize());
@@ -56,7 +59,7 @@ public class AffiliationController {
 
     @GetMapping("/add-affiliation")
     public String showAddAffiliationForm(Model model) {
-        model.addAttribute("affiliatedWithDto", new AffiliatedWithDto());
+        model.addAttribute("affiliatedWithDto", new com.capgemini.Hospital_Management_UI.Dto.AffiliatedWithDto());
         try {
             System.out.println("Adding affiliation");
             ResponseEntity<Response<List<PhysicianDto>>> physicianResponse = affiliationFeignClient.getAllPhysicians();
@@ -76,7 +79,7 @@ public class AffiliationController {
     }
 
     @PostMapping("/add-affiliation")
-    public String createAffiliation(@ModelAttribute AffiliatedWithDto affiliatedWithDto, Model model) {
+    public String createAffiliation(@ModelAttribute com.capgemini.Hospital_Management_UI.Dto.AffiliatedWithDto affiliatedWithDto, Model model) {
         try {
             ResponseEntity<Response<String>> response = affiliationFeignClient.createAffiliated(affiliatedWithDto);
             System.out.println(response.getBody().getData());

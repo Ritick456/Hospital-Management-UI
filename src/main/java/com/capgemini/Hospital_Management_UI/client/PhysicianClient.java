@@ -17,4 +17,6 @@ public interface PhysicianClient {
         @GetMapping
         ResponseEntity<Response<List<PhysicianDto>>> getAllPhysicians();
 
+
+
 }

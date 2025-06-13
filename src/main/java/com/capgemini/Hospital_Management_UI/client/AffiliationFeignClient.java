@@ -1,8 +1,9 @@
-package com.capgemini.Hospital_Management_UI.OpenFeign;
+package com.capgemini.Hospital_Management_UI.client;
 
-
-import com.capgemini.Hospital_Management_UI.Dto.*;
-;
+import com.capgemini.Hospital_Management_UI.dto.DepartmentDto;
+import com.capgemini.Hospital_Management_UI.dto.PageResponse;
+import com.capgemini.Hospital_Management_UI.dto.PhysicianDto;
+import com.capgemini.Hospital_Management_UI.dto.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ import java.util.List;
 public interface AffiliationFeignClient {
 
     @GetMapping("/api/affiliated_with")
-    ResponseEntity<Response<PageResponse<ResponseAffiliatedDto>>> getAllAffiliatedWith(
+    ResponseEntity<Response<PageResponse<com.capgemini.Hospital_Management_UI.Dto.ResponseAffiliatedDto>>> getAllAffiliatedWith(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "physician") String sort,
@@ -25,7 +26,7 @@ public interface AffiliationFeignClient {
     );
 
     @PostMapping("/api/affiliated_with/post")
-    ResponseEntity<Response<String>> createAffiliated(@RequestBody AffiliatedWithDto affiliatedWithDto);
+    ResponseEntity<Response<String>> createAffiliated(@RequestBody com.capgemini.Hospital_Management_UI.Dto.AffiliatedWithDto affiliatedWithDto);
 
     @GetMapping("/api/physician")
     ResponseEntity<Response<List<PhysicianDto>>> getAllPhysicians();
