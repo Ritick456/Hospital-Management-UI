@@ -1,19 +1,24 @@
 package com.capgemini.Hospital_Management_UI.dto;
 
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
+@Builder
 public class Response<T> {
     private int status;
     private String message;
-    private LocalDateTime time;
     private T data;
+
+    @Builder.Default
+    private LocalDateTime time = LocalDateTime.now();
 }
-
-
-
-
-
