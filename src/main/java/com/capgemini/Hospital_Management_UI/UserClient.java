@@ -1,8 +1,8 @@
 package com.capgemini.Hospital_Management_UI;
 
-import com.capgemini.Hospital_Management_UI.DTO.AppointmentDTO;
-import com.capgemini.Hospital_Management_UI.DTO.PageResponse;
-import com.capgemini.Hospital_Management_UI.DTO.Response;
+import com.capgemini.Hospital_Management_UI.dto.AppointmentDTO;
+import com.capgemini.Hospital_Management_UI.dto.PageResponse;
+import com.capgemini.Hospital_Management_UI.dto.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "hospital-management-system", url = "http://localhost:8091/api/appointment")
+@FeignClient(name = "appointment", url = "http://localhost:8091/api/appointment")
 public interface UserClient {
 
     @GetMapping

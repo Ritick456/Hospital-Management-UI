@@ -1,7 +1,7 @@
 package com.capgemini.Hospital_Management_UI.controller;
 
-import com.capgemini.Hospital_Management_UI.DTO.AppointmentDTO;
-import com.capgemini.Hospital_Management_UI.DTO.PageResponse;
+import com.capgemini.Hospital_Management_UI.dto.AppointmentDTO;
+import com.capgemini.Hospital_Management_UI.dto.PageResponse;
 import com.capgemini.Hospital_Management_UI.UserClient;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
