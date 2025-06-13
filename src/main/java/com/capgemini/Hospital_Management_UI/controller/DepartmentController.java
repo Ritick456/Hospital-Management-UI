@@ -126,6 +126,22 @@ public class DepartmentController{
     }
 
 
+    @GetMapping("/show-add-department-form")
+    public String showAddDepartmentForm(Model model) {
+        CreateDepartmentDto departmentDto = new CreateDepartmentDto();
+        departmentDto.setAffiliatedPhysicians(List.of(new AffiliatedPhysicianDto())); // one empty physician for now
+        model.addAttribute("department", departmentDto);
+        return "add-department";
+    }
+
+    @PostMapping("/create-department")
+    public String createDepartment(@ModelAttribute("department") CreateDepartmentDto dto) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForObject("http://localhost:8091/api/department", dto, String.class);
+        return "redirect:/show-departments";
+    }
+
+
 }
 
 
