@@ -17,7 +17,7 @@ import java.util.List;
 public interface AffiliationFeignClient {
 
     @GetMapping("/api/affiliated_with")
-    ResponseEntity<Response<PageResponse<com.capgemini.Hospital_Management_UI.Dto.ResponseAffiliatedDto>>> getAllAffiliatedWith(
+    ResponseEntity<Response<PageResponse<com.capgemini.Hospital_Management_UI.dto.ResponseAffiliatedDto>>> getAllAffiliatedWith(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "physician") String sort,
@@ -26,7 +26,7 @@ public interface AffiliationFeignClient {
     );
 
     @PostMapping("/api/affiliated_with/post")
-    ResponseEntity<Response<String>> createAffiliated(@RequestBody com.capgemini.Hospital_Management_UI.Dto.AffiliatedWithDto affiliatedWithDto);
+    ResponseEntity<Response<String>> createAffiliated(@RequestBody com.capgemini.Hospital_Management_UI.dto.AffiliatedWithDto affiliatedWithDto);
 
     @GetMapping("/api/physician")
     ResponseEntity<Response<List<PhysicianDto>>> getAllPhysicians();

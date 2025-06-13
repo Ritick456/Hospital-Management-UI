@@ -1,4 +1,4 @@
-package com.capgemini.Hospital_Management_UI.Dto;
+package com.capgemini.Hospital_Management_UI.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
